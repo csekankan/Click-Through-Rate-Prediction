@@ -4,21 +4,30 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder,MinMaxScaler
 from sklearn.preprocessing import OneHotEncoder
 
-def file_up(col):
+def file_up(col,separator):
+        print(separator)
         df=pd.DataFrame()
         w = st.file_uploader("Upload a data")
         
         if w is not None:
-                 df = pd.read_csv(w,sep="\t" ,names=col)
+                 if(separator=='\\t'):
+                        df = pd.read_csv(w,sep='\t' ,names=col)
+                 else:
+                      df = pd.read_csv(w,sep=separator ,names=col)
      
                 
         return df
 def run():
      allcols = st.text_input("Enter all column names separated by comma(,)", value="")   
+     
      labl = st.text_input("Enter Label Column name", value="")   
      nu_columns = st.text_input("Enter Numerical Column names separated by comma(,)", value="")        
      cat_columns = st.text_input("Enter Categorical Column names separated by comma(,)", value="")
      fraction = st.text_input("fraction of data you want to process", value="0.01")
+     separator = st.selectbox(
+                f"Data separator",
+                 [',','|' , '\\t']
+                 )  
      df= pd.DataFrame()
      allcols=allcols.strip().split(",")
      cat_columns=cat_columns.strip().split(",")
@@ -34,7 +43,7 @@ def run():
      # for i in  nu_columns:
      #      cols.append(i)
 
-     df=file_up(cols)
+     df=file_up(cols,separator)
 
      # Remove id columns
      drop_unique_ids=[]

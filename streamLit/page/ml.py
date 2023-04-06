@@ -94,6 +94,7 @@ def run(modelname,train,cat_features,continue_var,label,train_test_frac,lg_max_d
 
 
     if modelname=='Random Forest':
+           
            model = RandomForestClassifier(n_estimators = rf_n_estimators,
                              max_depth = rf_max_depth,
                              criterion = "gini")

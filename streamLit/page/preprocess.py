@@ -25,7 +25,9 @@ def construct_sidebar(df,cat_cols,nu_col,label):
 
         print(options)
         if st.sidebar.button('apply'):
-               
+               if 'minmax' not in st.session_state:
+                        st.session_state['minmax']=options
+                 
                mms = MinMaxScaler(feature_range=(0, 1))
                if(df is not None and len(options)>0):
                     df[options] = mms.fit_transform(df[options])
@@ -44,31 +46,24 @@ def construct_sidebar(df,cat_cols,nu_col,label):
                  )
                batch_size=int(st.sidebar.text_input("batch_size", value="512"))
                epochs=int(st.sidebar.text_input("epochs", value="5"))
-               if st.sidebar.button('Train'):
+               if st.sidebar.button('Train',key='dl'):
                     stats=model.run(model_selected,df,label,cat_cols,nu_col,train_test_frac=train_test,
                                     dnn_hidden_units=dnn_hidden_units,dnn_act=dnn_act,batch_size=batch_size,epochs=epochs)
         if(model_selected in ['Logistic Regression'] ):
              
-               if st.sidebar.button('Train'):
+               if st.sidebar.button('Train',key='lr'):
                     stats=model.run(model_selected,df,label,cat_cols,nu_col,train_test_frac=train_test)
                
         if(model_selected in ['Random Forest'] ):
                rf_n_estimators=int(st.sidebar.text_input("n_estimators", value="1000"))
                rf_max_depth=int(st.sidebar.text_input("max_depth", value="9"))
-               if st.sidebar.button('Train'):
+               if st.sidebar.button('Train',key='rm'):
                     stats=model.run(model_selected,df,label,cat_cols,nu_col,
                                     train_test_frac=train_test,rf_n_estimators=rf_n_estimators,rf_max_depth=rf_max_depth)
 
-        if(model_selected in ['Random Forest'] ):
-               rm_penalty=st.sidebar.selectbox(
-                f"penalty",
-                 ['l2','l1' , 'elasticnet']
-                 )
-               if st.sidebar.button('Train'):
-                    stats=model.run(model_selected,df,label,cat_cols,nu_col,train_test_frac=train_test,rm_penalty=rm_penalty)
         if(model_selected in ['Decision Tree'] ):  
                ds_max_depth=int(st.sidebar.text_input("max_depth", value="9") )
-               if st.sidebar.button('Train'):
+               if st.sidebar.button('Train',key='dt'):
                     stats=model.run(model_selected,df,label,cat_cols,nu_col,train_test_frac=train_test)
 
         if(model_selected in ['LightGbm'] ):  
@@ -85,7 +80,7 @@ def construct_sidebar(df,cat_cols,nu_col,label):
                  ['True','False']
                  )
                lg_is_unbalanced=(lg_is_unbalanced=='True')
-               if st.sidebar.button('Train'):
+               if st.sidebar.button('Train',key='lgb'):
                     stats=model.run(model_selected,df,label,cat_cols,nu_col,train_test_frac=train_test,
                                     lg_max_depth=lg_max_depth,lg_pos_bagging_fraction=lg_pos_bagging_fraction,
                                     lg_neg_bagging_fraction=lg_neg_bagging_fraction,lg_feature_fraction=lg_feature_fraction,
@@ -96,7 +91,7 @@ def construct_sidebar(df,cat_cols,nu_col,label):
                xg_learning_rate=float(st.sidebar.text_input("learning_rate", value=".1"))
                xg_max_depth=int(st.sidebar.text_input("max_depth", value="9"))
                xg_numestimator=int(st.sidebar.text_input("n_estimators", value="100"))
-               if st.sidebar.button('Train'):
+               if st.sidebar.button('Train',key='xgb'):
                     stats=model.run(model_selected,df,label,cat_cols,nu_col,train_test_frac=train_test)
                
            
