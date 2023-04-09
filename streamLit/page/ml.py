@@ -70,12 +70,13 @@ def run(modelname,train,cat_features,continue_var,label,train_test_frac,lg_max_d
            return trainmodel(modelname,model,train,label,train_test_frac)
     
     if modelname=='LightGbm':
-           model = LGBMClassifier(boosting_type='gbdt', class_weight=None, colsample_bytree=1.0,
-                        learning_rate=lg_learning_rate, max_depth=7, min_child_samples=20,feature_fraction=lg_feature_fraction,
-                        min_child_weight=0.001, min_split_gain=0.0, n_estimators=lg_numestimator,
-                        n_jobs=-1, num_leaves=500, objective='binary', random_state=None,
-                        reg_alpha=0.0, reg_lambda=0.0, silent=True, subsample=1.0,is_unbalanced=lg_is_unbalanced,
-                         subsample_freq=0,neg_bagging_fraction=lg_neg_bagging_fraction,pos_bagging_fraction=lg_pos_bagging_fraction)
+          
+           model = LGBMClassifier(boosting_type='gbdt', 
+                        learning_rate=lg_learning_rate, max_depth=lg_max_depth, 
+                        n_estimators=lg_numestimator,
+                         num_leaves=lg_num_leaves, objective='binary', 
+                        silent=True,is_unbalanced=lg_is_unbalanced,
+                        )
            return trainmodel(modelname,model,train,label,train_test_frac)
 
 

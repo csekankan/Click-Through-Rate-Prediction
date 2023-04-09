@@ -3,7 +3,8 @@ import streamlit as st
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder ,MinMaxScaler
 from page import model
-def construct_sidebar(df,cat_cols,nu_col,label):
+def construct_sidebar(dfip,cat_cols,nu_col,label):
+        df=dfip.copy()
         st.sidebar.markdown(
             '<p class="header-style"><h2>Model Training</h2></p>',
             unsafe_allow_html=True
@@ -14,23 +15,18 @@ def construct_sidebar(df,cat_cols,nu_col,label):
         fill_mean = lambda x: x.fillna(x.mean())
       
         for col in nu_col:
-            print(len(col)>0)
+           
             if(len(col)>0):
+             
+               print(df[[col]].head(1))
                df[col] = df[col].fillna(df[col].mean())
                df[col] = df[col].astype('float64')
-        df = df.fillna('unknown')
-        options = list(st.sidebar.multiselect("Apply MinMaxScaller: ",nu_col))
+        df = df.fillna('-1')
         
-     
-
-        print(options)
-        if st.sidebar.button('apply'):
-               if 'minmax' not in st.session_state:
-                        st.session_state['minmax']=options
-                 
-               mms = MinMaxScaler(feature_range=(0, 1))
-               if(df is not None and len(options)>0):
-                    df[options] = mms.fit_transform(df[options])
+              
+        mms = MinMaxScaler(feature_range=(0, 1))
+        if(df is not None and len(nu_col)>0):
+                    df[nu_col] = mms.fit_transform(df[nu_col])
         #st.write(df.head(5))
         train_test = st.sidebar.text_input("Train and Test Split", value="0.2")
         train_test=float(train_test)
@@ -67,23 +63,21 @@ def construct_sidebar(df,cat_cols,nu_col,label):
                     stats=model.run(model_selected,df,label,cat_cols,nu_col,train_test_frac=train_test)
 
         if(model_selected in ['LightGbm'] ):  
+               #st.write(df)
                lg_max_depth=int(st.sidebar.text_input("max_depth", value="9"))
-               lg_pos_bagging_fraction=float(st.sidebar.text_input("pos_bagging_fraction", value="1"))
-               lg_neg_bagging_fraction=float(st.sidebar.text_input("neg_bagging_fraction", value="1"))
-               lg_feature_fraction=float(st.sidebar.text_input("feature_fraction", value="1"))
-               lg_numestimator=int(st.sidebar.text_input("n_estimators", value="100"))
                lg_learning_rate=float(st.sidebar.text_input("learning_rate", value=".1"))
                lg_num_leaves=int(st.sidebar.text_input("num_leaves", value="50"))
-               
+               lg_numestimator=int(st.sidebar.text_input("n_estimators", value="100"))
+
                lg_is_unbalanced=st.sidebar.selectbox(
                 f"is_unbalanced",
-                 ['True','False']
+                 ['False','True']
                  )
                lg_is_unbalanced=(lg_is_unbalanced=='True')
                if st.sidebar.button('Train',key='lgb'):
                     stats=model.run(model_selected,df,label,cat_cols,nu_col,train_test_frac=train_test,
-                                    lg_max_depth=lg_max_depth,lg_pos_bagging_fraction=lg_pos_bagging_fraction,
-                                    lg_neg_bagging_fraction=lg_neg_bagging_fraction,lg_feature_fraction=lg_feature_fraction,
+                                    lg_max_depth=lg_max_depth,
+                                   
                                     lg_learning_rate=lg_learning_rate,lg_num_leaves=lg_num_leaves,lg_numestimator=lg_numestimator,
                                     lg_is_unbalanced=lg_is_unbalanced
                                     )
