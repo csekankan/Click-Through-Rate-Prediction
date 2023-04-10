@@ -5,12 +5,11 @@ from sklearn.preprocessing import LabelEncoder,MinMaxScaler
 from sklearn.preprocessing import OneHotEncoder
 
 def file_up(col,separator):
-      df=pd.DataFrame()
-      if (col is None or len(col)==0):
-      	return None    
-      w = st.file_uploader("Upload a data")
-      
-      if w is not None:
+       df=pd.DataFrame()
+       w = st.file_uploader("Upload a data")
+       if (col is None or len(col)==0):
+             return None      
+       if w is not None:
                if(separator=='\\t'):
                       df = pd.read_csv(w,sep='\t' ,skiprows=[0],names=col)
                else:
@@ -18,7 +17,7 @@ def file_up(col,separator):
                     print(df.head(5))
      
               
-      return df
+       return df
 def run():
       allcols = st.text_input("Enter all column names separated by comma(,)", value="")   
       
@@ -49,8 +48,7 @@ def run():
       cols=[]
       if(len(labl)>0):
        cols=[labl]
-      print('ffffffffffffffff')
-      print(cat_columns)
+  
       for i in  cat_columns:
             if(len(i)>0):
              cols.append(i)
@@ -61,7 +59,6 @@ def run():
       print(cols)
       if df is not None and df.shape[1]>0  and cols is not None and len(cols)>0:
         print(df.columns)
-        print('gg')
         print(cols)
         df=df[cols]
       # Remove id columns

@@ -26,6 +26,5 @@ from os.path import isfile, join
 if __name__ == "__main__":
     
     df,cat_columns,nu_columns,labl=dataLoader.run()
-    if 'df' not in st.session_state:
-        st.session_state.df = df
+   
     preprocess.construct_sidebar(df,cat_columns,nu_columns,labl)

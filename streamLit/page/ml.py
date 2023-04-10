@@ -17,7 +17,6 @@ def trainmodel(name,model,train,label,train_test_frac):
     X = train.drop([label], axis=1)
     y = train[label]
     x_train,x_cv,y_train,y_cv=train_test_split(X,y,test_size=train_test_frac)
-    model = LogisticRegression(random_state=1)
     model.fit(x_train,y_train)
     pred_ans  = model.predict(x_cv)
     res = {'Metrics': ['Model','LogLoss', 'roc_auc_score', 'f1 score', 'precision score','recall score','accuracy score'],
