@@ -53,6 +53,7 @@ def run(modelname,train,label,cat_features,continue_var,train_test_frac,lg_max_d
 
 
         if(res is not None ):
+            
                 tab1, tab2 = st.tabs(["Data set","Results"] )
                 
                 with tab1:
